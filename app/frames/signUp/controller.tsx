@@ -19,7 +19,11 @@ export default class SignUpController extends FrameController<any, IData, Contex
             this.config.navigate("/");
         } catch (e) {
             if (e instanceof ApiRequestError && e.status === 422) {
-                this.emit({ errors: e.errors });
+                this.set({
+                    errors: Object.keys(e.errors).map((fieldName) => {
+                        return fieldName + " " + e.errors[fieldName];
+                    }),
+                });
                 return;
             }
             throw e;

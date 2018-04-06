@@ -21,15 +21,25 @@ export interface IArticle {
         following: boolean;
     };
 }
+export interface IUser {
+    email: string;
+    token: string;
+    username: string;
+    bio: string;
+    image: string | null;
+}
 class Api {
     constructor(protected config: IApiConfig) { }
-    public async doGetRequest(endpoint: string, params?: { [index: string]: any }) {
+    public async doGetRequest(
+        endpoint: string,
+        params?: { [index: string]: any },
+        headers?: { [index: string]: string },
+    ) {
         params = params || {};
         const logger = this.config.logger;
-        logger.log("Api::GetRequest", endpoint, params);
+        logger.log("Api::GetRequest", endpoint, params, headers);
         const response = await fetch(this.config.endpoint + "/" + endpoint + "?" +
-            querystring.stringify(params),
-        );
+            querystring.stringify(params), { headers });
         if (response.status === 422) {
             throw new ApiRequestError({
                 status: response.status,
@@ -44,14 +54,19 @@ class Api {
         logger.log("Api::Result", result);
         return result;
     }
-    public async doPostRequest(endpoint: string, params?: { [index: string]: any }) {
+    public async doPostRequest(
+        endpoint: string,
+        params?: { [index: string]: any },
+        headers?: { [index: string]: string },
+    ) {
         params = params || {};
         const logger = this.config.logger;
-        logger.log("Api::PostRequest", endpoint, params);
+        logger.log("Api::PostRequest", endpoint, params, headers);
         const response = await fetch(this.config.endpoint + "/" + endpoint, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json; charset=utf-8",
+                ...(headers || {}),
             },
             body: JSON.stringify(params),
         });
@@ -69,14 +84,11 @@ class Api {
         logger.log("Api::Result", result);
         return result;
     }
-    public async createUser(params: { username: string; email: string; password: string }): Promise<{
-        email: string;
-        token: string;
-        username: string;
-        bio: string;
-        image: string | null;
-    }> {
-        return (await this.doPostRequest("api/users", { user: params })).user;
+    public async user(params: { token: string }): Promise<IUser> {
+        return (await this.doGetRequest("user", {}, { Authorization: "Token " + params.token })).user;
+    }
+    public async createUser(params: { username: string; email: string; password: string }): Promise<IUser> {
+        return (await this.doPostRequest("users", { user: params })).user;
     }
     public async tags() {
         return (await this.doGetRequest("tags")).tags;

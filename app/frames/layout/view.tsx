@@ -1,5 +1,7 @@
+import { IViewProps } from "neweb";
 import React = require("react");
-export default class LayoutView extends React.Component<{}, {}> {
+import { IData } from "./controller";
+export default class LayoutView extends React.Component<IViewProps<{}, IData>, {}> {
     render() {
         return [<nav className="navbar navbar-light" key="header">
             <div className="container">
@@ -9,17 +11,23 @@ export default class LayoutView extends React.Component<{}, {}> {
                         {/*<!-- Add "active" class when you're on that page" -->*/}
                         <a className="nav-link active" href="/">Home</a>
                     </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="">
-                            <i className="ion-compose"></i>&nbsp;New Post</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="">
-                            <i className="ion-gear-a"></i>&nbsp;Settings</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="/register">Sign up</a>
-                    </li>
+                    {this.props.data.isAuth ?
+                        [<li className="nav-item">
+                            <a className="nav-link" href="">
+                                <i className="ion-compose"></i>&nbsp;New Post</a>
+                        </li>,
+                        <li className="nav-item">
+                            <a className="nav-link" href="">
+                                <i className="ion-gear-a"></i>&nbsp;Settings</a>
+                        </li>, <li className="nav-item">
+                            <a className="nav-link" href="/profile">{this.props.data.username}</a>
+                        </li>]
+                        :
+                        [<li className="nav-item">
+                            <a className="nav-link" href="/login">Sign in</a>
+                        </li>, <li className="nav-item">
+                            <a className="nav-link" href="/register">Sign up</a>
+                        </li>]}
                 </ul>
             </div>
         </nav>,

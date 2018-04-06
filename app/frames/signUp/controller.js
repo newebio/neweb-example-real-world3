@@ -29,7 +29,11 @@ class SignUpController extends neweb_1.FrameController {
             }
             catch (e) {
                 if (e instanceof Api_1.ApiRequestError && e.status === 422) {
-                    this.emit({ errors: e.errors });
+                    this.set({
+                        errors: Object.keys(e.errors).map((fieldName) => {
+                            return fieldName + " " + e.errors[fieldName];
+                        }),
+                    });
                     return;
                 }
                 throw e;

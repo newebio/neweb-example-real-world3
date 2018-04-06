@@ -14,13 +14,13 @@ class Api {
     constructor(config) {
         this.config = config;
     }
-    doGetRequest(endpoint, params) {
+    doGetRequest(endpoint, params, headers) {
         return __awaiter(this, void 0, void 0, function* () {
             params = params || {};
             const logger = this.config.logger;
-            logger.log("Api::GetRequest", endpoint, params);
+            logger.log("Api::GetRequest", endpoint, params, headers);
             const response = yield node_fetch_1.default(this.config.endpoint + "/" + endpoint + "?" +
-                querystring.stringify(params));
+                querystring.stringify(params), { headers });
             if (response.status === 422) {
                 throw new ApiRequestError({
                     status: response.status,
@@ -36,16 +36,14 @@ class Api {
             return result;
         });
     }
-    doPostRequest(endpoint, params) {
+    doPostRequest(endpoint, params, headers) {
         return __awaiter(this, void 0, void 0, function* () {
             params = params || {};
             const logger = this.config.logger;
-            logger.log("Api::PostRequest", endpoint, params);
+            logger.log("Api::PostRequest", endpoint, params, headers);
             const response = yield node_fetch_1.default(this.config.endpoint + "/" + endpoint, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: Object.assign({ "Content-Type": "application/json; charset=utf-8" }, (headers || {})),
                 body: JSON.stringify(params),
             });
             if (response.status === 422) {
@@ -63,9 +61,14 @@ class Api {
             return result;
         });
     }
+    user(params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.doGetRequest("user", {}, { Authorization: "Token " + params.token })).user;
+        });
+    }
     createUser(params) {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield this.doPostRequest("api/users", { user: params })).user;
+            return (yield this.doPostRequest("users", { user: params })).user;
         });
     }
     tags() {

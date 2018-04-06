@@ -21,10 +21,10 @@ export default class SignUpView extends React.Component<IViewProps<any, IData>, 
                         <p className="text-xs-center">
                             <a href="">Have an account?</a>
                         </p>
-                        {this.props.data.errors ? this.props.data.errors.map((err)=>(
+                        {this.props.data.errors ? this.props.data.errors.map((err) => (
                             <ul className="error-messages">
-                                <li>That email is already taken</li>
-                        </ul>) : null}
+                                <li>{err}</li>
+                            </ul>)) : null}
 
                         <form onSubmit={(e) => {
                             e.preventDefault();
@@ -38,7 +38,7 @@ export default class SignUpView extends React.Component<IViewProps<any, IData>, 
                             <fieldset className="form-group">
                                 <input
                                     onChange={(e) => this.setState({ email: e.target.value })}
-                                    className="form-control form-control-lg" type="text" placeholder="Email" />
+                                    className="form-control form-control-lg" type="email" placeholder="Email" />
                             </fieldset>
                             <fieldset className="form-group">
                                 <input

@@ -19,7 +19,7 @@ class SignUpView extends React.Component {
                         React.createElement("p", { className: "text-xs-center" },
                             React.createElement("a", { href: "" }, "Have an account?")),
                         this.props.data.errors ? this.props.data.errors.map((err) => (React.createElement("ul", { className: "error-messages" },
-                            React.createElement("li", null, "That email is already taken")))) : null,
+                            React.createElement("li", null, err)))) : null,
                         React.createElement("form", { onSubmit: (e) => {
                                 e.preventDefault();
                                 this.props.dispatch("signUp", this.state);
@@ -27,7 +27,7 @@ class SignUpView extends React.Component {
                             React.createElement("fieldset", { className: "form-group" },
                                 React.createElement("input", { onChange: (e) => this.setState({ name: e.target.value }), className: "form-control form-control-lg", type: "text", placeholder: "Your Name" })),
                             React.createElement("fieldset", { className: "form-group" },
-                                React.createElement("input", { onChange: (e) => this.setState({ email: e.target.value }), className: "form-control form-control-lg", type: "text", placeholder: "Email" })),
+                                React.createElement("input", { onChange: (e) => this.setState({ email: e.target.value }), className: "form-control form-control-lg", type: "email", placeholder: "Email" })),
                             React.createElement("fieldset", { className: "form-group" },
                                 React.createElement("input", { onChange: (e) => this.setState({ password: e.target.value }), className: "form-control form-control-lg", type: "password", placeholder: "Password" })),
                             React.createElement("button", { type: "submit", className: "btn btn-lg btn-primary pull-xs-right" }, "Sign up")))))));

@@ -4,7 +4,8 @@ const Api_1 = require("./Api");
 class Context {
     constructor(config) {
         this.config = config;
-        this.api = new Api_1.default({ endpoint: this.config.config.apiEndpoint });
+        this.logger = console;
+        this.api = new Api_1.default({ endpoint: this.config.config.apiEndpoint, logger: this.logger });
     }
 }
 exports.default = Context;

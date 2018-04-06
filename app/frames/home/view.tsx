@@ -1,7 +1,7 @@
 import { IViewProps } from "neweb";
 import React = require("react");
-import { IData } from "./controller";
-export default class LayoutView extends React.Component<IViewProps<{}, IData>, {}> {
+import { IData, IParams } from "./controller";
+export default class LayoutView extends React.Component<IViewProps<IParams, IData>, {}> {
     render() {
         return <div className="home-page">
 
@@ -26,43 +26,39 @@ export default class LayoutView extends React.Component<IViewProps<{}, IData>, {
                                 </li>
                             </ul>
                         </div>
-
-                        <div className="article-preview">
-                            <div className="article-meta">
-                                <a href="profile.html"><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
-                                <div className="info">
-                                    <a href="" className="author">Eric Simons</a>
-                                    <span className="date">January 20th</span>
+                        {this.props.data.articles.map((article, key) => (
+                            <div className="article-preview" key={key}>
+                                <div className="article-meta">
+                                    <a href="profile.html"><img src={article.author.image} /></a>
+                                    <div className="info">
+                                        <a href="" className="author">{article.author.username}</a>
+                                        <span className="date">{article.createdAt}</span>
+                                    </div>
+                                    <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                                        <i className="ion-heart"></i> {article.favoritesCount}</button>
                                 </div>
-                                <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                                    <i className="ion-heart"></i> 29
-                  </button>
+                                <a href="" className="preview-link">
+                                    <h1>{article.title}</h1>
+                                    <p>{article.description}</p>
+                                    <span>Read more...</span>
+                                </a>
                             </div>
-                            <a href="" className="preview-link">
-                                <h1>How to build webapps that scale</h1>
-                                <p>This is the description for the post.</p>
-                                <span>Read more...</span>
-                            </a>
-                        </div>
-
-                        <div className="article-preview">
-                            <div className="article-meta">
-                                <a href="profile.html"><img src="http://i.imgur.com/N4VcUeJ.jpg" /></a>
-                                <div className="info">
-                                    <a href="" className="author">Albert Pai</a>
-                                    <span className="date">January 20th</span>
-                                </div>
-                                <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                                    <i className="ion-heart"></i> 32
-                  </button>
-                            </div>
-                            <a href="" className="preview-link">
-                                <h1>The song you won't ever stop singing. No matter how hard you try.</h1>
-                                <p>This is the description for the post.</p>
-                                <span>Read more...</span>
-                            </a>
-                        </div>
-
+                        ))}
+                        <nav>
+                            <ul className="pagination">
+                                {[1, 2, 3, 4, 5, 6, 7, 8].map((v) => (
+                                    <li className={this.props.data.currentPage === v ?
+                                        "page-item active" : "page-item"} key={v}>
+                                        <a onClick={(e) => {
+                                            if (!e.ctrlKey) {
+                                                e.preventDefault();
+                                                this.props.navigate("/?page=" + v);
+                                            }
+                                        }} className="page-link" href={"/?page=" + v}>{v}</a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </nav>
                     </div>
 
                     <div className="col-md-3">

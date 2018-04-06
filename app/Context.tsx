@@ -5,8 +5,10 @@ export interface IContextConfig {
 }
 class Context {
     api: Api;
+    logger: typeof console;
     constructor(protected config: IContextConfig) {
-        this.api = new Api({ endpoint: this.config.config.apiEndpoint });
+        this.logger = console;
+        this.api = new Api({ endpoint: this.config.config.apiEndpoint, logger: this.logger });
     }
 }
 export default Context;

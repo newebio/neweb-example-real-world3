@@ -1,4 +1,4 @@
-import { IRequest, IRoute, IRouter, ISessionContext } from "neweb";
+import { IPageRoute, IRequest, IRoute, IRouter, ISessionContext } from "neweb";
 import { parse } from "querystring";
 import URL = require("url");
 class Router implements IRouter {
@@ -7,29 +7,34 @@ class Router implements IRouter {
         const urlParams = url.query ? parse(url.query) : {};
         switch (url.pathname) {
             case "/":
-                return {
-                    page: {
-                        rootFrame: {
-                            params: {},
-                            frames: {
-                                children: {
-                                    name: "home",
-                                    params: urlParams,
-                                    frames: {},
-                                },
-                            },
-                            name: "layout",
-                        },
-                        url: params.request.url,
-                    },
-                    type: "page",
-                };
+                return this.resolveWithLayout("home", urlParams, params.request.url);
+            case "/signup":
+                return this.resolveWithLayout("signUp", urlParams, params.request.url);
             default:
                 return {
                     type: "notFound",
                     text: "Unknown url " + params.request.url,
                 };
         }
+    }
+    protected resolveWithLayout(frameName: string, params: any, url: string): IPageRoute {
+        return {
+            page: {
+                rootFrame: {
+                    params: {},
+                    frames: {
+                        children: {
+                            name: frameName,
+                            params,
+                            frames: {},
+                        },
+                    },
+                    name: "layout",
+                },
+                url,
+            },
+            type: "page",
+        };
     }
 }
 export default Router;

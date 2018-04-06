@@ -17,23 +17,9 @@ class Router {
             const urlParams = url.query ? querystring_1.parse(url.query) : {};
             switch (url.pathname) {
                 case "/":
-                    return {
-                        page: {
-                            rootFrame: {
-                                params: {},
-                                frames: {
-                                    children: {
-                                        name: "home",
-                                        params: urlParams,
-                                        frames: {},
-                                    },
-                                },
-                                name: "layout",
-                            },
-                            url: params.request.url,
-                        },
-                        type: "page",
-                    };
+                    return this.resolveWithLayout("home", urlParams, params.request.url);
+                case "/signup":
+                    return this.resolveWithLayout("signUp", urlParams, params.request.url);
                 default:
                     return {
                         type: "notFound",
@@ -41,6 +27,25 @@ class Router {
                     };
             }
         });
+    }
+    resolveWithLayout(frameName, params, url) {
+        return {
+            page: {
+                rootFrame: {
+                    params: {},
+                    frames: {
+                        children: {
+                            name: frameName,
+                            params,
+                            frames: {},
+                        },
+                    },
+                    name: "layout",
+                },
+                url,
+            },
+            type: "page",
+        };
     }
 }
 exports.default = Router;

@@ -1,7 +1,7 @@
 import { IViewProps } from "neweb";
 import React = require("react");
 import { IData, IParams } from "./controller";
-export default class LayoutView extends React.Component<IViewProps<IParams, IData>, {}> {
+export default class HomeView extends React.Component<IViewProps<IParams, IData>, {}> {
     render() {
         return <div className="home-page">
 
@@ -46,7 +46,7 @@ export default class LayoutView extends React.Component<IViewProps<IParams, IDat
                         ))}
                         <nav>
                             <ul className="pagination">
-                                {[1, 2, 3, 4, 5, 6, 7, 8].map((v) => (
+                                {this.props.data.paginations.map((v) => (
                                     <li className={this.props.data.currentPage === v ?
                                         "page-item active" : "page-item"} key={v}>
                                         <a onClick={(e) => {

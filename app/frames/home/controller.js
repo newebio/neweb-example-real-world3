@@ -12,26 +12,32 @@ const neweb_1 = require("neweb");
 class default_1 extends neweb_1.FrameController {
     getInitialData() {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.prepareData(this.config.params);
+            const [tags, articlesResult] = yield Promise.all([
+                this.config.context.api.tags(),
+                this.getArticles(this.config.params),
+            ]);
+            return Object.assign({ tags }, articlesResult);
         });
     }
     onChangeParams(nextParams) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.emit(yield this.prepareData(nextParams));
+            const articlesResult = yield this.getArticles(nextParams);
+            this.set(Object.assign({}, articlesResult));
         });
     }
-    prepareData(params) {
+    getArticles(params) {
         return __awaiter(this, void 0, void 0, function* () {
             const currentPage = params && params.page ? parseInt(params.page, 10) : 1;
             const count = 5;
-            const [tags, articles] = yield Promise.all([
-                this.config.context.api.tags(),
-                this.config.context.api.articles({ offset: (currentPage - 1) * count, limit: count }),
-            ]);
+            const articles = yield this.config.context.api.articles({ offset: (currentPage - 1) * count, limit: count });
+            const paginations = [];
+            for (let i = 1; i < Math.ceil(articles.articlesCount / count) + 1; i++) {
+                paginations.push(i);
+            }
             return {
                 currentPage,
-                articles,
-                tags,
+                articles: articles.articles,
+                paginations,
             };
         });
     }

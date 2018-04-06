@@ -8,8 +8,9 @@ class Router implements IRouter {
         switch (url.pathname) {
             case "/":
                 return this.resolveWithLayout("home", urlParams, params.request.url);
-            case "/signup":
-                return this.resolveWithLayout("signUp", urlParams, params.request.url);
+            case "/register":
+                const route = this.resolveWithLayout("signUp", urlParams, params.request.url);
+                return route;
             default:
                 return {
                     type: "notFound",

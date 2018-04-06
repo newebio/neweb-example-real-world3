@@ -7,7 +7,7 @@ export default class LayoutView extends React.Component<{}, {}> {
                 <ul className="nav navbar-nav pull-xs-right">
                     <li className="nav-item">
                         {/*<!-- Add "active" class when you're on that page" -->*/}
-                        <a className="nav-link active" href="">Home</a>
+                        <a className="nav-link active" href="/">Home</a>
                     </li>
                     <li className="nav-item">
                         <a className="nav-link" href="">
@@ -18,7 +18,7 @@ export default class LayoutView extends React.Component<{}, {}> {
                             <i className="ion-gear-a"></i>&nbsp;Settings</a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="">Sign up</a>
+                        <a className="nav-link" href="/register">Sign up</a>
                     </li>
                 </ul>
             </div>

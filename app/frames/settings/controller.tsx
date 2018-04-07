@@ -1,5 +1,4 @@
 import { FrameController } from "neweb";
-import { Onemitter } from "onemitter";
 import { IUser } from "../../Api";
 import Context from "../../Context";
 export interface IData {
@@ -14,7 +13,7 @@ export default class LayoutController extends FrameController<{}, IData, Context
     async logout() {
         await this.config.session.setItem("user", null);
     }
-    update(user: IUser & { password: string }) {
-
+    update(_: IUser & { password: string }) {
+        //
     }
 }

@@ -1,32 +1,32 @@
-import { IViewProps } from "neweb";
+import { IViewProps, Link } from "neweb";
 import React = require("react");
 import { IData } from "./controller";
 export default class LayoutView extends React.Component<IViewProps<{}, IData>, {}> {
     render() {
         return [<nav className="navbar navbar-light" key="header">
             <div className="container">
-                <a className="navbar-brand" href="index.html">conduit</a>
+                <Link className="navbar-brand" href="/">conduit</Link>
                 <ul className="nav navbar-nav pull-xs-right">
                     <li className="nav-item">
                         {/*<!-- Add "active" class when you're on that page" -->*/}
-                        <a className="nav-link active" href="/">Home</a>
+                        <Link className="nav-link active" href="/">Home</Link>
                     </li>
                     {this.props.data.isAuth ?
                         [<li className="nav-item">
-                            <a className="nav-link" href="">
-                                <i className="ion-compose"></i>&nbsp;New Post</a>
+                            <Link className="nav-link" href="">
+                                <i className="ion-compose"></i>&nbsp;New Post</Link>
                         </li>,
                         <li className="nav-item">
-                            <a className="nav-link" href="">
-                                <i className="ion-gear-a"></i>&nbsp;Settings</a>
+                            <Link className="nav-link" href="/settings">
+                                <i className="ion-gear-a"></i>&nbsp;Settings</Link>
                         </li>, <li className="nav-item">
-                            <a className="nav-link" href="/profile">{this.props.data.username}</a>
+                            <Link className="nav-link" href="/profile">{this.props.data.username}</Link>
                         </li>]
                         :
                         [<li className="nav-item">
-                            <a className="nav-link" href="/login">Sign in</a>
+                            <Link className="nav-link" href="/login">Sign in</Link>
                         </li>, <li className="nav-item">
-                            <a className="nav-link" href="/register">Sign up</a>
+                            <Link className="nav-link" href="/register">Sign up</Link>
                         </li>]}
                 </ul>
             </div>

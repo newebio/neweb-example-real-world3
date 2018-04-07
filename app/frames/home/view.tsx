@@ -34,7 +34,8 @@ export default class HomeView extends React.Component<IViewProps<IParams, IData>
                                         <a href="" className="author">{article.author.username}</a>
                                         <span className="date">{article.createdAt}</span>
                                     </div>
-                                    <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                                    <button disabled={!this.props.data.isAuth}
+                                        className="btn btn-outline-primary btn-sm pull-xs-right">
                                         <i className="ion-heart"></i> {article.favoritesCount}</button>
                                 </div>
                                 <a href={"/article/" + article.slug} className="preview-link">

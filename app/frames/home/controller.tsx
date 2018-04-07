@@ -1,5 +1,6 @@
 import { FrameController } from "neweb";
-import { IArticle } from "../../Api";
+import { Onemitter } from "onemitter";
+import { IArticle, IUser } from "../../Api";
 import Context from "../../Context";
 export interface IData {
     tags: string[];
@@ -10,16 +11,26 @@ export interface IData {
 }
 export interface IParams {
     page?: string;
+    feed?: "your" | "global";
 }
 export default class extends FrameController<IParams, IData, Context> {
+    feedType: "your" | "global";
+    userEmitter: Onemitter<IUser | undefined>;
+    onInit() {
+        this.userEmitter = this.config.session.getItem("user");
+        this.feedType = this.config.params.feed || "global";
+        this.userEmitter.on((user) => {
+            this.set({ isAuth: !!user });
+        });
+    }
     async getInitialData() {
-        const [tags, articlesResult, user] = await Promise.all([
+        const [tags, articlesResult, isAuth] = await Promise.all([
             this.config.context.api.tags(),
             this.getArticles(this.config.params),
-            this.config.session.getItem("user"),
+            !!(this.userEmitter.has() && this.userEmitter.get()),
         ]);
         return {
-            isAuth: !!user,
+            isAuth,
             tags,
             ...articlesResult,
         };

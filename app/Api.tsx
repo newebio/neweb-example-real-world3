@@ -84,6 +84,9 @@ class Api {
         logger.log("Api::Result", result);
         return result;
     }
+    public async login(params: { email: string; password: string }): Promise<IUser> {
+        return (await this.doPostRequest("users/login", { user: params })).user;
+    }
     public async user(params: { token: string }): Promise<IUser> {
         return (await this.doGetRequest("user", {}, { Authorization: "Token " + params.token })).user;
     }

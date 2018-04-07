@@ -1,4 +1,4 @@
-import { IViewProps } from "neweb";
+import { IViewProps, Link } from "neweb";
 import React = require("react");
 import { IData, IParams } from "./controller";
 export default class HomeView extends React.Component<IViewProps<IParams, IData>, {}> {
@@ -18,9 +18,9 @@ export default class HomeView extends React.Component<IViewProps<IParams, IData>
                     <div className="col-md-9">
                         <div className="feed-toggle">
                             <ul className="nav nav-pills outline-active">
-                                <li className="nav-item">
+                                {this.props.data.isAuth ? <li className="nav-item">
                                     <a className="nav-link disabled" href="">Your Feed</a>
-                                </li>
+                                </li> : null}
                                 <li className="nav-item">
                                     <a className="nav-link active" href="">Global Feed</a>
                                 </li>
@@ -37,7 +37,7 @@ export default class HomeView extends React.Component<IViewProps<IParams, IData>
                                     <button className="btn btn-outline-primary btn-sm pull-xs-right">
                                         <i className="ion-heart"></i> {article.favoritesCount}</button>
                                 </div>
-                                <a href="" className="preview-link">
+                                <a href={"/article/" + article.slug} className="preview-link">
                                     <h1>{article.title}</h1>
                                     <p>{article.description}</p>
                                     <span>Read more...</span>
@@ -49,12 +49,9 @@ export default class HomeView extends React.Component<IViewProps<IParams, IData>
                                 {this.props.data.paginations.map((v) => (
                                     <li className={this.props.data.currentPage === v ?
                                         "page-item active" : "page-item"} key={v}>
-                                        <a onClick={(e) => {
-                                            if (!e.ctrlKey) {
-                                                e.preventDefault();
-                                                this.props.navigate("/?page=" + v);
-                                            }
-                                        }} className="page-link" href={"/?page=" + v}>{v}</a>
+                                        <Link className="page-link" href={"/?page=" + v}>
+                                            {v}
+                                        </Link>
                                     </li>
                                 ))}
                             </ul>

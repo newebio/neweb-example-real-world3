@@ -6,17 +6,20 @@ export interface IData {
     articles: IArticle[];
     paginations: number[];
     currentPage: number;
+    isAuth: boolean;
 }
 export interface IParams {
     page?: string;
 }
 export default class extends FrameController<IParams, IData, Context> {
     async getInitialData() {
-        const [tags, articlesResult] = await Promise.all([
+        const [tags, articlesResult, user] = await Promise.all([
             this.config.context.api.tags(),
             this.getArticles(this.config.params),
+            this.config.session.getItem("user"),
         ]);
         return {
+            isAuth: !!user,
             tags,
             ...articlesResult,
         };

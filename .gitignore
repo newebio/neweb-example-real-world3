@@ -60,4 +60,5 @@ app/sessions
 app/cache
 cache
 sessions
+app/**/*.js
 

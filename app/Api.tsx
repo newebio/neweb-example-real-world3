@@ -58,6 +58,7 @@ class Api {
         logger.log("Api::GetRequest", endpoint, params, headers);
         const response = await fetch(this.config.endpoint + "/" + endpoint + "?" +
             querystring.stringify(params), { headers });
+        logger.log("Api::Result", response.status);
         if (response.status === 422) {
             throw new ApiRequestError({
                 status: response.status,
@@ -69,7 +70,6 @@ class Api {
                 + response.status + "::" + response.statusText);
         }
         const result = await response.json();
-        logger.log("Api::Result", result);
         return result;
     }
     public async doPostRequest(

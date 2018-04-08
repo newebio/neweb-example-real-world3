@@ -15,7 +15,6 @@ export default class SignUpController extends FrameController<any, IData, Contex
                 password: params.password,
             });
             await this.config.session.setItem("user", user);
-            this.config.navigate("/");
         } catch (e) {
             if (e instanceof ApiRequestError && e.status === 422) {
                 this.set({

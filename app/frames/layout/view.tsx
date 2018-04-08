@@ -17,7 +17,7 @@ export default class LayoutView extends React.Component<IViewProps<{}, IData>, {
                         </li>
                         {this.props.data.isAuth ?
                             [<li className="nav-item">
-                                <Link className="nav-link" href="">
+                                <Link className="nav-link" href="/editor">
                                     <i className="ion-compose"></i>&nbsp;New Post</Link>
                             </li>,
                             <li className="nav-item">

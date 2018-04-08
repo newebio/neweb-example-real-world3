@@ -76,6 +76,7 @@ class Api {
             },
             body: JSON.stringify(params),
         });
+        logger.log("Api::Result", response.status);
         if (response.status === 422) {
             throw new ApiRequestError({
                 status: response.status,
@@ -87,7 +88,6 @@ class Api {
                 + response.status + "::" + response.statusText);
         }
         const result = await response.json();
-        logger.log("Api::Result", result);
         return result;
     }
     public async login(params: { email: string; password: string }): Promise<IUser> {
@@ -101,6 +101,15 @@ class Api {
     }
     public async createUser(params: { username: string; email: string; password: string }): Promise<IUser> {
         return (await this.doPostRequest("users", { user: params })).user;
+    }
+    public async article(slug: string): Promise<IArticle> {
+        return (await this.doGetRequest("articles/" + slug)).article;
+    }
+    public async createArticle(
+        token: string,
+        params: { title: string, description: string, body: string, tagList: string[] }): Promise<IArticle> {
+        return (await this.doPostRequest("articles", { article: params },
+            { Authorization: "Token " + token })).article;
     }
     public async tags() {
         return (await this.doGetRequest("tags")).tags;

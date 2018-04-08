@@ -1,6 +1,6 @@
 import {
-    ClassicRouter, MatchedRoute,
-    PageRouteByFrame, PageRouteWithParent, RouteWithRedirectOn,
+    ClassicRouter, IRequest,
+    MatchedRoute, PageRouteByFrame, PageRouteWithParent, RouteWithRedirectOn,
 } from "neweb";
 export default class Router extends ClassicRouter {
     onInit() {
@@ -26,15 +26,25 @@ export default class Router extends ClassicRouter {
             PageRouteWithParent({ parentFrame: "layout" }, PageRouteByFrame({
                 frameName: "profile",
             }))));
+        this.addRoute(MatchedRoute({ path: "/article/:slug" },
+            PageRouteWithParent({ parentFrame: "layout" }, PageRouteByFrame({
+                frameName: "article",
+            }))));
+
+        const withLogin = {
+            condition: () => {
+                const user = this.config.session.getItem("user");
+                return !(user && user.has() && user.get());
+            },
+            url: (request: IRequest) => "/login?redirect=" + request.url,
+        };
         this.addRoute(MatchedRoute({ path: "/settings" },
-            RouteWithRedirectOn({
-                condition: () => {
-                    const user = this.config.session.getItem("user");
-                    return !(user && user.has() && user.get());
-                },
-                url: (request) => "/login?redirect=" + request.url,
-            }, PageRouteWithParent({ parentFrame: "layout" }, PageRouteByFrame({
+            RouteWithRedirectOn(withLogin, PageRouteWithParent({ parentFrame: "layout" }, PageRouteByFrame({
                 frameName: "settings",
+            })))));
+        this.addRoute(MatchedRoute({ path: "/editor" },
+            RouteWithRedirectOn(withLogin, PageRouteWithParent({ parentFrame: "layout" }, PageRouteByFrame({
+                frameName: "editor",
             })))));
         this.config.session.getItem("user").on(() => {
             this.navigate({ request: this.currentRequest });

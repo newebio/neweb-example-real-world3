@@ -5,7 +5,10 @@ export default class LayoutView extends React.Component<IViewProps<{}, IData>, {
     render() {
         return <div>
             <SeansStatusContext.Consumer>
-                {(status: string) => <div style={{ color: "red", backgroundColor: "yellow" }}>{status}</div>}
+                {(status: string) => <div style={{
+                    position: "fixed",
+                    color: "red", backgroundColor: "yellow",
+                }}>{status}</div>}
             </SeansStatusContext.Consumer>
             <nav className="navbar navbar-light" key="header">
                 <div className="container">

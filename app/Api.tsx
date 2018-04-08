@@ -28,6 +28,12 @@ export interface IUser {
     bio: string;
     image: string | null;
 }
+export interface IProfile {
+    username: string;
+    bio: string;
+    image: string;
+    following: boolean;
+}
 class Api {
     constructor(protected config: IApiConfig) { }
     public async doGetRequest(
@@ -86,6 +92,9 @@ class Api {
     }
     public async login(params: { email: string; password: string }): Promise<IUser> {
         return (await this.doPostRequest("users/login", { user: params })).user;
+    }
+    public async profile(username: string): Promise<IProfile> {
+        return (await this.doGetRequest("profiles/" + username)).profile;
     }
     public async user(params: { token: string }): Promise<IUser> {
         return (await this.doGetRequest("user", {}, { Authorization: "Token " + params.token })).user;

@@ -3195,9 +3195,9 @@ neweb-pack@^0.1.0:
     mkdirp "^0.5.1"
     webpack "^4.3.0"
 
-neweb@^0.6.2:
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/neweb/-/neweb-0.6.2.tgz#a479d0a5bcb4d39b20361079093f77c1084032b7"
+neweb@^0.6.8:
+  version "0.6.8"
+  resolved "https://registry.yarnpkg.com/neweb/-/neweb-0.6.8.tgz#509bda6c90798ed8bca1bad48f3da87953bc5dd4"
   dependencies:
     "@types/cookie-parser" "^1.4.1"
     "@types/express" "^4.11.1"

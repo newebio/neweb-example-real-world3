@@ -11,14 +11,13 @@ export interface IData {
 }
 export interface IParams {
     page?: string;
-    feed?: "your" | "global";
 }
 export default class extends FrameController<IParams, IData, Context> {
     feedType: "your" | "global";
     userEmitter: Onemitter<IUser | undefined>;
     onInit() {
         this.userEmitter = this.config.session.getItem("user");
-        this.feedType = this.config.params.feed || "global";
+        this.feedType = "global";
         this.userEmitter.on((user) => {
             this.set({ isAuth: !!user });
         });

@@ -1,5 +1,6 @@
 import { IViewProps, Link } from "neweb";
 import React = require("react");
+import ArticleItem from "./../../components/ArticleItem";
 import { IData, IParams } from "./controller";
 export default class HomeView extends React.Component<IViewProps<IParams, IData>, {}> {
     render() {
@@ -19,7 +20,7 @@ export default class HomeView extends React.Component<IViewProps<IParams, IData>
                         <div className="feed-toggle">
                             <ul className="nav nav-pills outline-active">
                                 {this.props.data.isAuth ? <li className="nav-item">
-                                    <a className="nav-link disabled" href="">Your Feed</a>
+                                    <a className="nav-link" href="">Your Feed</a>
                                 </li> : null}
                                 <li className="nav-item">
                                     <a className="nav-link active" href="">Global Feed</a>
@@ -27,23 +28,7 @@ export default class HomeView extends React.Component<IViewProps<IParams, IData>
                             </ul>
                         </div>
                         {this.props.data.articles.map((article, key) => (
-                            <div className="article-preview" key={key}>
-                                <div className="article-meta">
-                                    <a href="profile.html"><img src={article.author.image} /></a>
-                                    <div className="info">
-                                        <a href="" className="author">{article.author.username}</a>
-                                        <span className="date">{article.createdAt}</span>
-                                    </div>
-                                    <button disabled={!this.props.data.isAuth}
-                                        className="btn btn-outline-primary btn-sm pull-xs-right">
-                                        <i className="ion-heart"></i> {article.favoritesCount}</button>
-                                </div>
-                                <a href={"/article/" + article.slug} className="preview-link">
-                                    <h1>{article.title}</h1>
-                                    <p>{article.description}</p>
-                                    <span>Read more...</span>
-                                </a>
-                            </div>
+                            <ArticleItem isAuth={this.props.data.isAuth} key={key} article={article} />
                         ))}
                         <nav>
                             <ul className="pagination">

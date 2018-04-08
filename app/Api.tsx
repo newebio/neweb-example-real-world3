@@ -21,6 +21,18 @@ export interface IArticle {
         following: boolean;
     };
 }
+export interface IArticleComment {
+    id: number;
+    createdAt: string;
+    updatedAt: string;
+    body: string;
+    author: {
+        username: string;
+        bio: string;
+        image: string;
+        following: boolean;
+    };
+}
 export interface IUser {
     email: string;
     token: string;
@@ -104,6 +116,9 @@ class Api {
     }
     public async article(slug: string): Promise<IArticle> {
         return (await this.doGetRequest("articles/" + slug)).article;
+    }
+    public async articleComments(slug: string): Promise<IArticleComment[]> {
+        return (await this.doGetRequest("articles/" + slug + "/comments")).comments;
     }
     public async createArticle(
         token: string,

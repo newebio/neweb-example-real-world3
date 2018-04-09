@@ -61,4 +61,4 @@ app/cache
 cache
 sessions
 app/**/*.js
-
+package-lock.json

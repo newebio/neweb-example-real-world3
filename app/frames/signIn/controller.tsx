@@ -1,4 +1,5 @@
 import { FrameController } from "neweb";
+import withError from "with-error";
 import { ApiRequestError } from "../../Api";
 import Context from "../../Context";
 export interface IData {
@@ -9,22 +10,23 @@ export default class SignUpController extends FrameController<any, IData, Contex
         return {};
     }
     async signIn(params: { password: string; email: string }) {
-        try {
-            const user = await this.config.context.api.login({
-                email: params.email,
-                password: params.password,
-            });
-            await this.config.session.setItem("user", user);
-        } catch (e) {
-            if (e instanceof ApiRequestError && e.status === 422) {
-                this.set({
-                    errors: Object.keys(e.errors).map((fieldName) => {
-                        return fieldName + " " + e.errors[fieldName];
-                    }),
-                });
-                return;
-            }
-            throw e;
+        const { error, result } = await withError(() => this.config.context.api.login({
+            email: params.email,
+            password: params.password,
+        }));
+        if (!error) {
+            await this.config.session.setItem("user", result);
+            return;
         }
+        if (error instanceof ApiRequestError && error.status === 422) {
+            this.set({
+                errors: Object.keys(error.errors).map((fieldName) => {
+                    return fieldName + " " + error.errors[fieldName];
+                }),
+            });
+            return;
+        }
+        throw error;
+
     }
 }

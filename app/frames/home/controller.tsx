@@ -1,55 +1,60 @@
 import { FrameController } from "neweb";
-import { Onemitter } from "onemitter";
-import { IArticle, IUser } from "../../Api";
+import { combineLatest, concat, from, Observable, of, Subject } from "rxjs";
+import { map } from "rxjs/operators";
+import { IArticle } from "../../Api";
 import Context from "../../Context";
-export interface IData {
+import { ISession } from "../../ISession";
+export interface IData extends IArticlesInfo {
     tags: string[];
-    articles: IArticle[];
-    paginations: number[];
-    currentPage: number;
     isAuth: boolean;
 }
 export interface IParams {
     page?: string;
 }
-export default class extends FrameController<IParams, IData, Context> {
+interface IArticlesInfo {
+    articles: IArticle[];
+    paginations: number[];
+    currentPage: number;
+}
+export default class extends FrameController<IParams, IData, Context, ISession> {
     feedType: "your" | "global";
-    userEmitter: Onemitter<IUser | undefined>;
+    isAuth$: Observable<boolean>;
+    tags$: Observable<any>;
+    articlesInfo$: Subject<IArticlesInfo>;
     onInit() {
-        this.userEmitter = this.config.session.getItem("user");
+        this.isAuth$ = concat(of(this.config.session.get("user")), this.config.session.get$("user"))
+            .pipe(map((v) => !!v));
         this.feedType = "global";
-        this.userEmitter.on((user) => {
-            this.set({ isAuth: !!user });
-        });
-    }
-    async getInitialData() {
-        const [tags, articlesResult, isAuth] = await Promise.all([
-            this.config.context.api.tags(),
-            this.getArticles(this.config.params),
-            !!(this.userEmitter.has() && this.userEmitter.get()),
-        ]);
-        return {
-            isAuth,
-            tags,
-            ...articlesResult,
-        };
+        this.tags$ = from(this.config.app.api.tags());
+        this.articlesInfo$ = new Subject();
+        this.subscriptions.push(
+            combineLatest(
+                this.isAuth$,
+                this.tags$,
+                this.articlesInfo$,
+            ).pipe(map(([isAuth, tags, articlesInfo]) => ({
+                isAuth,
+                tags,
+                ...articlesInfo,
+            }))).subscribe(this.data$),
+        );
+        this.updateArticles(this.config.params);
     }
     async onChangeParams(nextParams: IParams) {
-        const articlesResult = await this.getArticles(nextParams);
-        this.set({ ...articlesResult });
+        await this.updateArticles(nextParams);
     }
-    async getArticles(params: IParams) {
+    async updateArticles(params: IParams) {
         const currentPage = params && params.page ? parseInt(params.page, 10) : 1;
         const count = 5;
-        const articles = await this.config.context.api.articles({ offset: (currentPage - 1) * count, limit: count });
+        const articles = await this.config.app.api.articles({ offset: (currentPage - 1) * count, limit: count });
         const paginations = [];
         for (let i = 1; i < Math.ceil(articles.articlesCount / count) + 1; i++) {
             paginations.push(i);
         }
-        return {
+        this.articlesInfo$.next({
             currentPage,
             articles: articles.articles,
             paginations,
-        };
+        });
     }
 }

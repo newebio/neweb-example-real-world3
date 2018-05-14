@@ -16,7 +16,7 @@
 <body>
     <div id="root">/*{%html%}*/</div>
     <script>/*{%script%}*/</script>
-    <script async src="/bundle.js"></script>
+    <script async src="/bundle./*{%env%}*/.js"></script>
     <script>
         window.addEventListener("neweb-seans-initialized", () => { 
             console.log("neweb-seans-initialized");

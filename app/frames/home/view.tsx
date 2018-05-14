@@ -4,7 +4,6 @@ import ArticleItem from "./../../components/ArticleItem";
 import { IData, IParams } from "./controller";
 export default class HomeView extends React.Component<IViewProps<IParams, IData>, {}> {
     render() {
-        console.log(this.props);
         return <div className="home-page">
 
             <div className="banner">
